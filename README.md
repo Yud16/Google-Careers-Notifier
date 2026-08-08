@@ -7,7 +7,7 @@ Google frequently posts job listings before applications actually open — the p
 ## How it works
 
 1. Paste a Google Careers job URL into the dashboard and click **Track**.
-2. The job is checked immediately, then re-checked automatically every `POLL_INTERVAL_SECONDS` (default 300s) until its Apply button appears.
+2. The job is checked immediately, then re-checked automatically every `POLL_INTERVAL_SECONDS` (default 60s) until its Apply button appears.
 3. Once found, you get a push notification (via [ntfy.sh](https://ntfy.sh)) and/or a desktop notification, and the dashboard shows a direct "Apply link" for that job.
 4. Jobs that already found their apply button stop being polled — only jobs still in the `waiting` state are re-checked.
 
