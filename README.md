@@ -1,6 +1,6 @@
 # Google Careers Apply-Button Tracker
 
-A small Flask dashboard that watches Google Careers job listings and tells you the moment the "Apply" button goes live, so you don't have to keep refreshing the page yourself.
+A dashboard that watches Google Careers job listings and tells you the moment the "Apply" button goes live, so you don't have to keep refreshing the page yourself.
 
 Google frequently posts job listings before applications actually open — the page exists, but there's no way to apply yet. This tool polls a listing in the background and pushes a notification (phone + desktop) as soon as the apply link appears.
 
