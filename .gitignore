@@ -1,5 +1,6 @@
 # Secrets — never commit your real config
 .env
+.env.example/
 
 # Runtime data
 jobs.db
