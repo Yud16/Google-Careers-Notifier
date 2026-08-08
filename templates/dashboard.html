@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Google Careers Apply-Button Tracker</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1f1f1f; }
+  h1 { font-size: 1.4rem; }
+  form.add-form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  form.add-form input[type=url] { flex: 1; padding: 0.5rem; font-size: 1rem; }
+  form.add-form button { padding: 0.5rem 1rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+  .status-waiting { color: #b06000; }
+  .status-found { color: #1a7f37; font-weight: 600; }
+  .status-error { color: #c0392b; }
+  a.job-link { word-break: break-all; }
+  .muted { color: #757575; font-size: 0.85rem; }
+  button.small { padding: 0.25rem 0.6rem; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+  <h1>Google Careers Apply-Button Tracker</h1>
+  <p class="muted">Polling every {{ interval }}s. Page auto-refreshes every 30s.</p>
+
+  <form class="add-form" method="post" action="{{ url_for('add_job') }}">
+    <input type="url" name="url" placeholder="https://www.google.com/about/careers/applications/jobs/results/..." required>
+    <button type="submit">Track</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Status</th>
+        <th>Last checked</th>
+        <th>Added</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for job in jobs %}
+      <tr>
+        <td>
+          <div>{{ job['title'] or job['url'] }}</div>
+          <a class="job-link muted" href="{{ job['url'] }}" target="_blank">{{ job['url'] }}</a>
+        </td>
+        <td>
+          {% if job['status'] == 'found' %}
+            <span class="status-found">Apply live!</span><br>
+            <a href="{{ job['apply_url'] }}" target="_blank">Apply link</a>
+          {% elif job['last_error'] %}
+            <span class="status-error">error</span>
+            <div class="muted">{{ job['last_error'] }}</div>
+          {% else %}
+            <span class="status-waiting">waiting</span>
+          {% endif %}
+        </td>
+        <td class="muted">{{ job['last_checked_at'] | friendly_time or 'never' }}</td>
+        <td class="muted">{{ job['added_at'] | friendly_time }}</td>
+        <td>
+          {% if job['status'] == 'waiting' %}
+          <form method="post" action="{{ url_for('check_job', job_id=job['id']) }}">
+            <button class="small" type="submit">Check now</button>
+          </form>
+          {% endif %}
+          <form method="post" action="{{ url_for('delete_job', job_id=job['id']) }}">
+            <button class="small" type="submit">Remove</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="muted">No jobs tracked yet — paste a Google Careers job URL above.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <script>
+    // Refresh the page automatically, but never while the user is mid-typing
+    // in the add-job field (a blind meta-refresh would wipe out their input).
+    setInterval(function () {
+      var input = document.querySelector('input[name="url"]');
+      if (document.activeElement !== input && input.value.trim() === '') {
+        window.location.reload();
+      }
+    }, 30000);
+  </script>
+</body>
+</html>

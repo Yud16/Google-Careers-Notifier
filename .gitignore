@@ -1,0 +1,14 @@
+# Secrets — never commit your real config
+.env
+
+# Runtime data
+jobs.db
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Local Claude Code permission settings (machine-specific, not shared config)
+.claude/settings.local.json
